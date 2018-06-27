@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <title>Offline Web Apps</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link type="text/css" rel="stylesheet" href="style/style.css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Offline Web Apps
+
+---
+class: center, middle
+
+## Some History
+
+<iframe width="100%" height="400" src="https://time.graphics/embed?v=1&id=104040" frameborder="0" allowfullscreen></iframe>
+<div><a href="https://time.graphics/fr/line/104040">timeline</a></div>
+---
+class: center, middle
+
+## Mobile first
+
+![market-share](./img/market-share.png)
+
+Mobile vs Desktop Global Market Share
+
+---
+class: center, middle
+
+### New use cases
+
+and problems...
+
+---
+class: center, middle
+
+## Solutions
+
+---
+class: center, middle
+
+### 1. Break
+
+![no wifi](./img/disconnected.png)
+
+---
+class: center,middle
+
+### 2. Native app
+
+![please download](./img/appstores.jpg)
+
+---
+class: center,middle
+
+### 3. Try again
+
+![wait and refresh](./img/mobile-offline-mode-refresh.png)
+
+---
+class: center,middle
+
+### 4. Offline mode
+
+---
+class: center,middle
+
+## Define your target
+
+Resilancy vs Disconnected vs Offline
+
+---
+class: center, middle
+
+## Offline assets
+
+Runtime / Content / Data
+
+---
+class: center, middle
+
+<table>
+    <thead>
+        <tr>
+            <th></th>
+            <th>JS/DOM Memory</th>
+            <th>Browser Cache</th>
+            <th>App Cache</th>
+            <th>Web Storage</th>
+            <th>Indexed DB</th>
+            <th>Service Worker</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Runtime</td>
+            <th></th>
+            <th>d, r</th>
+            <th>✅</th>
+            <th></th>
+            <th></th>
+            <th>✅</th>
+        </tr>
+        <tr>
+            <td>Content</td>
+            <th>r</th>
+            <th>d, r</th>
+            <th>⚠</th>
+            <th></th>
+            <th>⚠</th>
+            <th>✅</th>
+        </tr>
+        <tr>
+            <td>Data</td>
+            <th>r</th>
+            <th></th>
+            <th></th>
+            <th>✅</th>
+            <th>✅</th>
+            <th>✅</th>
+        </tr>
+    </tbody>
+</table>
+---
+class: center, middle
+
+## Some hints
+
+---
+class: center, middle
+
+### JS/DOM Memory
+
+The amnesic
+
+---
+class: center, middle
+
+![memory leak](./img/memory-leak.png)
+
+---
+class: center, middle
+
+### Browser Cache
+
+The uncontrollable
+
+---
+class: center, middle
+
+![memory leak](./img/http-cache.png)
+
+[MDN HTTP Cache](https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching)
+
+---
+class: center, middle
+
+### AppCache
+
+The undesirable
+
+---
+class: middle
+
+```txt
+CACHE MANIFEST
+# v0.1.1
+
+CACHE:
+/favicon.ico
+index.html
+style.css
+images/logo.png
+dist/bundle.js
+
+NETWORK:
+ *
+
+FALLBACK:
+/api/ /static.html
+images/large/ images/offline.jpg
+```
+
+```html
+<html manifest="http://krampstudio.com/appcache.mf">
+```
+
+---
+class: middle,center
+
+![deprecated](./img/appcache-dep.png)
+
+[Can I use ?](https://caniuse.com/#search=appcache)
+
+---
+class: center, middle
+
+### Web Storage
+
+The good boy
+---
+class: middle,center
+
+But size matters
+
+**The 5MB rule**
+
+[Quotas](https://www.html5rocks.com/en/tutorials/offline/quota-research/)
+
+---
+class: center, middle
+
+### Indexed DB
+
+The tireless
+
+---
+class: middle
+
+```js
+var request = window.indexedDB.open("user-store", 1);
+request.onerror = err => console.error(err);
+
+request.onupgradeneeded = evt => {
+    const store = evt.currentTarget.result.createObjectStore('contacts', {
+        keyPath: 'id',
+        autoIncrement: true
+    });
+    store.createIndex('id', 'id', { unique: true });
+    store.createIndex('login', 'login', { unique: false });
+    store.createIndex('passwd', 'passwd', { unique: false });
+    store.createIndex('email', 'email', { unique: true });
+    store.createIndex('firstname', 'firstname', { unique: false });
+    store.createIndex('lastname', 'lastname', { unique: false });
+};
+```
+---
+class: middle
+
+```js
+var request = window.indexedDB.open("user-store", 1);
+
+request.onerror = err => console.error(err);
+
+request.onsuccess = function(evt) {
+    const db = this.result;
+
+    const transaction = db.transaction(["contacts"], "readwrite");
+    const objectStore = transaction.objectStore("contacts");
+    objectStore.add({
+        id : '12',
+        login : 'mrrobot',
+        passwd : 'efa1287b5c8',
+        email : 'mr.robot@protonmail.com',
+        firstname : 'Elliot',
+        firstname : 'Alderson'
+    });
+}
+```
+---
+class: center, middle
+
+### Service workers
+
+The prodigal son
+
+---
+class: center, middle
+
+## Extra
+
+![PouchDB](./img/pouchdb.png)
+
+![CouchDB](./img/couchdb.jpg)
+
+---
+
+class: center, middle
+
+http://krampstudio.com
+
+@kramp
+
+
+    </textarea>
+    <script src="js/remark-latest.min.js"></script>
+    <script>
+        var slideshow = remark.create({
+            ratio: '4:3'
+        });
+    </script>
+  </body>
+</html>

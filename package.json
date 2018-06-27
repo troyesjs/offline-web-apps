@@ -1,0 +1,22 @@
+{
+  "name": "offline-web-apps",
+  "version": "0.1.0",
+  "description": "Slide deck about offline web apps",
+  "main": "index.js",
+  "scripts": {
+    "start" : "http-server deck"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/troyesjs/offline-web-apps.git"
+  },
+  "author": "Bertrand Chevrier",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/troyesjs/offline-web-apps/issues"
+  },
+  "homepage": "https://github.com/troyesjs/offline-web-apps#readme",
+  "devDependencies": {
+    "http-server": "^0.11.1"
+  }
+}
